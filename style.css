@@ -91,3 +91,36 @@ input:focus { border-color: #3498db; }
     color: #aaa;
     margin-top: 20px;
 }
+
+/* ... (Kode CSS sebelumnya tetap ada, tambahkan ini di bawahnya) ... */
+
+.tabs {
+    display: flex;
+    background: #f1f1f1;
+    border-bottom: 2px solid #ddd;
+}
+
+.tab-link {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    background: none;
+    font-weight: bold;
+    color: #777;
+    cursor: pointer;
+    border-radius: 0;
+}
+
+.tab-link.active {
+    color: #2c3e50;
+    border-bottom: 3px solid #3498db;
+    background: white;
+}
+
+.tab-content {
+    padding-top: 15px;
+}
+
+.preview-card {
+    min-height: 60px;
+}

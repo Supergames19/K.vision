@@ -3,22 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SG Computer - Aktivasi Optus</title>
+    <title>SG Computer - Aktivasi Digital</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Tambahkan ini di bawah tag <title> -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#2c3e50">
-<meta name="apple-mobile-web-app-capable" content="yes">
-
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js');
-    });
-  }
-</script>
-
-    <!-- Library Barcode Scanner -->
+    <link rel="manifest" href="manifest.json">
     <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
 <body>
@@ -26,10 +13,15 @@
 <div class="container">
     <div class="header">
         <h1>SG COMPUTER</h1>
-        <p>Layanan Aktivasi Digital Cepat</p>
+        <p>Digital Activation Center</p>
     </div>
 
-    <!-- Area Scanner Kamera -->
+    <!-- Navigasi Menu -->
+    <div class="tabs">
+        <button id="tab-baru" class="tab-link active" onclick="openTab('baru')">Optus Baru</button>
+        <button id="tab-lama" class="tab-link" onclick="openTab('lama')">Digital Lama</button>
+    </div>
+
     <div id="reader"></div>
     
     <div class="button-group">
@@ -37,29 +29,42 @@
         <button id="btn-stop" class="btn-red" onclick="stopScanner()" style="display:none;">❌ Tutup Kamera</button>
     </div>
 
-    <div class="form-section">
-        <div class="input-field">
-            <label>Serial Number (SN)</label>
-            <input type="text" id="sn_code" placeholder="Masukkan SN (Contoh: F980...)">
+    <!-- FORM AKTIVASI BARU -->
+    <div id="form-baru" class="tab-content">
+        <div class="form-section">
+            <div class="input-field">
+                <label>Serial Number (SN)</label>
+                <input type="text" id="sn_baru" placeholder="Scan atau ketik SN...">
+            </div>
+            <div class="input-field">
+                <label>SMCID</label>
+                <input type="number" id="smcid_baru" placeholder="Scan atau ketik SMCID...">
+            </div>
         </div>
+    </div>
 
-        <div class="input-field">
-            <label>SMCID</label>
-            <input type="number" id="smcid_code" placeholder="Masukkan SMCID (Contoh: 8004...)">
+    <!-- FORM AKTIVASI LAMA -->
+    <div id="form-lama" class="tab-content" style="display:none;">
+        <div class="form-section">
+            <div class="input-field">
+                <label>Serial Number (SN) Lama</label>
+                <input type="text" id="sn_lama" placeholder="Scan atau ketik SN Lama...">
+            </div>
+            <p style="font-size: 11px; color: #888; text-align: center;">Format: Pilih [SN] gol07</p>
         </div>
     </div>
 
     <div class="preview-card">
-        <span>Format Pesan SG Computer:</span>
-        <div id="message-preview">Reg AT#6281362462327#[SN]#[SMCID]#mdn01</div>
+        <span>Format Pesan:</span>
+        <div id="message-preview">Memuat format...</div>
     </div>
 
     <button class="btn-whatsapp" onclick="sendToWhatsApp()">
-        Kirim Aktivasi via WhatsApp
+        Kirim Aktivasi Sekarang
     </button>
     
     <div class="footer">
-        &copy; 2026 - 2027 SG Computer | Digital Solution
+        &copy; SG Computer | PWA Version
     </div>
 </div>
 

@@ -1,38 +1,49 @@
 let html5QrCode;
+let activeTab = 'baru'; // default tab
+
 const phoneAt = "6281362462327";
 const waNumber = "628118500828";
-const mdnCode = "mdn01";
+
+function openTab(mode) {
+    activeTab = mode;
+    // Update UI Tab
+    document.querySelectorAll('.tab-link').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+    
+    if(mode === 'baru') {
+        document.getElementById('tab-baru').classList.add('active');
+        document.getElementById('form-baru').style.display = 'block';
+    } else {
+        document.getElementById('tab-lama').classList.add('active');
+        document.getElementById('form-lama').style.display = 'block';
+    }
+    updatePreview();
+}
 
 function startScanner() {
     document.getElementById('btn-scan').style.display = 'none';
     document.getElementById('btn-stop').style.display = 'block';
 
     html5QrCode = new Html5Qrcode("reader");
-    const config = { fps: 15, qrbox: { width: 280, height: 160 } };
-
     html5QrCode.start(
         { facingMode: "environment" }, 
-        config, 
+        { fps: 15, qrbox: { width: 280, height: 160 } },
         (decodedText) => {
-            // Auto-detect SN vs SMCID
-            if (decodedText.toUpperCase().startsWith('F')) {
-                document.getElementById('sn_code').value = decodedText.toUpperCase();
-            } else if (decodedText.length >= 15) {
-                document.getElementById('smcid_code').value = decodedText;
-            } else {
-                // Jika tidak yakin masuk ke mana, isi yang kosong
-                if (!document.getElementById('sn_code').value) {
-                    document.getElementById('sn_code').value = decodedText;
+            const code = decodedText.toUpperCase();
+            
+            if (activeTab === 'baru') {
+                if (code.startsWith('F')) {
+                    document.getElementById('sn_baru').value = code;
                 } else {
-                    document.getElementById('smcid_code').value = decodedText;
+                    document.getElementById('smcid_baru').value = code;
                 }
+            } else {
+                // Di tab LAMA, semua hasil scan masuk ke SN Lama
+                document.getElementById('sn_lama').value = code;
             }
             updatePreview();
         }
-    ).catch(err => {
-        alert("Kamera error: " + err);
-        stopScanner();
-    });
+    ).catch(err => { console.error(err); stopScanner(); });
 }
 
 function stopScanner() {
@@ -45,27 +56,39 @@ function stopScanner() {
 }
 
 function updatePreview() {
-    const sn = document.getElementById('sn_code').value || "[SN]";
-    const smcid = document.getElementById('smcid_code').value || "[SMCID]";
-    const message = `Reg AT#${phoneAt}#${sn}#${smcid}#${mdnCode}`;
+    let message = "";
+    if (activeTab === 'baru') {
+        const sn = document.getElementById('sn_baru').value || "[SN]";
+        const smcid = document.getElementById('smcid_baru').value || "[SMCID]";
+        message = `Reg AT#${phoneAt}#${sn}#${smcid}#mdn01`;
+    } else {
+        const snLama = document.getElementById('sn_lama').value || "[SN LAMA]";
+        message = `Pilih ${snLama} gol07`;
+    }
     document.getElementById('message-preview').innerText = message;
 }
 
-// Input listener untuk manual typing
-document.getElementById('sn_code').addEventListener('input', updatePreview);
-document.getElementById('smcid_code').addEventListener('input', updatePreview);
+// Listeners
+document.getElementById('sn_baru').addEventListener('input', updatePreview);
+document.getElementById('smcid_baru').addEventListener('input', updatePreview);
+document.getElementById('sn_lama').addEventListener('input', updatePreview);
 
 function sendToWhatsApp() {
-    const sn = document.getElementById('sn_code').value;
-    const smcid = document.getElementById('smcid_code').value;
-
-    if (!sn || !smcid) {
-        alert("Mohon isi atau scan SN dan SMCID terlebih dahulu.");
-        return;
+    let message = "";
+    
+    if (activeTab === 'baru') {
+        const sn = document.getElementById('sn_baru').value;
+        const smcid = document.getElementById('smcid_baru').value;
+        if (!sn || !smcid) return alert("Isi data Optus Baru!");
+        message = `Reg AT#${phoneAt}#${sn}#${smcid}#mdn01`;
+    } else {
+        const snLama = document.getElementById('sn_lama').value;
+        if (!snLama) return alert("Isi SN Digital Lama!");
+        message = `Pilih ${snLama} gol07`;
     }
 
-    const message = `Reg AT#${phoneAt}#${sn}#${smcid}#${mdnCode}`;
-    const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
-    
-    window.open(waUrl, '_blank');
+    window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`, '_blank');
 }
+
+// Jalankan preview saat pertama kali buka
+updatePreview();
