@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SG Computer - Aktivasi Optus</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Tambahkan ini di bawah tag <title> -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2c3e50">
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js');
+    });
+  }
+</script>
+
     <!-- Library Barcode Scanner -->
     <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
