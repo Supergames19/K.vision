@@ -7,8 +7,26 @@
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
     <script src="https://unpkg.com/html5-qrcode"></script>
+
+    <!-- KODE ANTI MALING (CSS) -->
+    <style>
+        /* Mencegah seleksi teks di seluruh halaman kecuali pada kolom input */
+        body {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        input, textarea {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+    </style>
 </head>
-<body>
+<!-- KODE ANTI MALING (Disable Klik Kanan & Drag) -->
+<body oncontextmenu="return false;" ondragstart="return false;" onselectstart="return false;">
 
 <div class="container">
     <div class="header">
@@ -69,5 +87,22 @@
 </div>
 
 <script src="script.js"></script>
+
+<!-- KODE ANTI MALING (JS Shortcut Blocker) -->
+<script>
+    document.onkeydown = function(e) {
+        // Blokir F12 (DevTools)
+        if(e.keyCode == 123) return false;
+        // Blokir Ctrl+Shift+I (Inspect Element)
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
+        // Blokir Ctrl+Shift+J (Console)
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
+        // Blokir Ctrl+U (View Source)
+        if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+        // Blokir Ctrl+S (Save Page)
+        if(e.ctrlKey && e.keyCode == 'S'.charCodeAt(0)) return false;
+    };
+</script>
+
 </body>
 </html>
